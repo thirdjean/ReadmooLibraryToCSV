@@ -561,6 +561,17 @@ async function extractBookDetailsInListMode(bookDataMap) {
     }
 }
 
+// Function to ensure the page is in list view
+async function returnToGridView() {
+    const gridViewButton = document.querySelector('button[data-view-type="grid-view"]');
+    if (gridViewButton) {
+        gridViewButton.click();  // Click to switch to list view
+        console.log("Switched to grid view.");
+        
+        // Wait for some time to allow the page to load
+        await new Promise(resolve => setTimeout(resolve, 2000));  // Adjust time as needed
+    }
+}
 
 
 // Generate CSV content from bookDataMap
@@ -609,6 +620,7 @@ async function scrapeData() {
     await ensureListView();
     await loadAllBookDataInListMode();
     await extractBookDetailsInListMode(bookDataMap);
+    await returnToGridView();
     
     // Generate CSV content
     csvData = generateCSVContent(bookDataMap);
