@@ -1,5 +1,4 @@
 // 用戶自訂區 (Temporarily cancelled)
-// let userAPCode = '78lpAR'; // 可改成自己的AP號碼
 let partialBookName = '停止輸出處書名（部分書名也可）'; // 停止輸出處書名（部分書名也可）。這本書與更之前買的書不會被輸出。
 
 let scrapeMode = 2; //1 = lite; 2=full ; 3=full+
