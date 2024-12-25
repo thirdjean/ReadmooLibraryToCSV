@@ -52,7 +52,6 @@ console.save = function(data) {
     let csvContent = ""; // Set CSV file headers
     switch (scrapeMode){
         case 1: // Lite mode
-            console.log("Checkpoint 3");
             console.log("Starting to export Lite mode CSV");
 
             csvContent = "書名,狀態,閱讀進度,書本URL,書名副標,作者,標籤" + '\n'; // Headers for lite mode
@@ -85,9 +84,7 @@ console.save = function(data) {
                                 '"' + (row.TotalReadingTime || '-').replace(/"/g, '""') + '",' + // 總閱讀時數 [Modal]
                                 '"' + (row.LastReadingDate || '-').replace(/"/g, '""') + '"\n';  // 上次閱讀日期 [Modal]
             });
-
-            console.log("Checkpoint 6");
-
+            
             break;
 
         case 3: // Full+ mode
