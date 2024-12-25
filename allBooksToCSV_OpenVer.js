@@ -126,6 +126,7 @@ console.save = function(data) {
     a.dispatchEvent(e);
 
     console.log(`Finished! CSV is saved. Filename: ${filename}.csv`);    
+    console.log(`完成！CSV檔案成功輸出。檔案名稱：${filename}.csv`);    
 }
 
 // Function to ensure the page is in list view
@@ -186,8 +187,9 @@ async function loadAllBookDataInGridMode() {
         currentScrollPosition = window.scrollY;
 
         // Check if we've reached the bottom of the page
-        if (currentScrollPosition >= document.body.scrollHeight - window.innerHeight) {
-            console.log("Reached the bottom of the page.");
+        if (currentScrollPosition === lastScrollPosition || 
+            currentScrollPosition >= document.body.scrollHeight - window.innerHeight - 1) {
+            console.log("No more scrolling possible. Reached the bottom of the page.");
             break;
         }
 
