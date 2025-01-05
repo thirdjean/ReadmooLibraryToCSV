@@ -6,11 +6,10 @@ let scrapeMode = 2; //1 = lite; 2=full ; 3=full+
 //Full: 書名	狀態	閱讀進度	書本URL	書名副標	作者	標籤    出版社	開始日期	結束日期	總閱讀時數	上次閱讀日期
 //Full+:書名	狀態	閱讀進度	書本URL	書名副標	作者	標籤    出版社	開始日期	結束日期	總閱讀時數	上次閱讀日期	ISBN	字數	出版日期
 
-
-// Default filename root
-let filenameRoot = '';
+let showOnlyFinished = true; //true: 只顯示已閱讀完成之書；false: 顯示全部的書
 
 // Set Base file name
+let filenameRoot = '';
 switch (scrapeMode){ 
     case 1: 
         filenameRoot = 'allBooks_lite'; // Lite mode
@@ -167,6 +166,37 @@ async function sortByNewestFirst() {
         console.log("Sort button not found.");
     }
 }
+
+// Function to filter by '閱讀完畢'
+async function filterShowOnlyFinished() {
+    const filterButton = document.querySelector('i.mo.mo-filter');
+    if (filterButton) {
+        filterButton.click();
+        
+        // Wait for the filter modal to appear
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Click the '閱讀完畢' option
+        const finishedOption = document.querySelector('div[data-value="finished"]');
+        const okButton = document.querySelector('.modal-content button.btn.btn-primary.btn-block');
+
+        if (finishedOption) {
+            finishedOption.click();
+            okButton.click();
+
+            //<button type="button" class="btn btn-primary btn-block">確定</button>
+            console.log("Filtered to show only 'Finished'.");
+            
+            // Wait for the sorting to be applied
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+            console.log("'最近閱讀' option not found.");
+        }
+    } else {
+        console.log("Filter button not found.");
+    }
+}
+
 
 // Function to load all book data in grid mode (with controlled scrolling)
 async function loadAllBookDataInGridMode() {
@@ -560,7 +590,7 @@ async function extractBookDetailsInListMode(bookDataMap) {
     }
 }
 
-// Function to ensure the page is in list view
+// Function to ensure the page returns to grid mode
 async function returnToGridView() {
     const gridViewButton = document.querySelector('button[data-view-type="grid-view"]');
     if (gridViewButton) {
@@ -572,6 +602,31 @@ async function returnToGridView() {
     }
 }
 
+// Function to return the page to default filtering state
+async function undoFilterOnlyFinished() {
+    const filterButton = document.querySelector('i.mo.mo-filter');
+    if (filterButton) {
+        filterButton.click();
+        
+        // Wait for the filter modal to appear
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Click the '閱讀完畢' option again, to unselect it.
+        const finishedOption = document.querySelector('div[data-value="finished"]');
+        const okButton = document.querySelector('.modal-content button.btn.btn-primary.btn-block');
+
+        if (finishedOption) {
+            finishedOption.click();
+            okButton.click();
+            // Wait for the sorting to be applied
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+            console.log("'最近閱讀' option not found.");
+        }
+    } else {
+        console.log("Filter button not found.");
+    }
+}
 
 // Generate CSV content from bookDataMap
 function generateCSVContent(bookDataMap) {
@@ -603,6 +658,11 @@ function generateCSVContent(bookDataMap) {
 // Main function to load book data and extract book details
 async function scrapeData() {
     await sortByNewestFirst();            // Ensure books are sorted by newest first
+
+    if(showOnlyFinished = true){
+        await filterShowOnlyFinished();
+    }
+
     await loadAllBookDataInGridMode();    // Load all books in grid mode
     await initializeBookDataMap();        // Initialize bookDataMap using the amount of books detected
 
@@ -620,6 +680,10 @@ async function scrapeData() {
     await loadAllBookDataInListMode();
     await extractBookDetailsInListMode(bookDataMap);
     await returnToGridView();
+
+    if(showOnlyFinished = true){
+        await undoFilterOnlyFinished();
+    }
     
     // Generate CSV content
     csvData = generateCSVContent(bookDataMap);
