@@ -659,7 +659,7 @@ function generateCSVContent(bookDataMap) {
 async function scrapeData() {
     await sortByNewestFirst();            // Ensure books are sorted by newest first
 
-    if(showOnlyFinished = true){
+    if(showOnlyFinished === true){
         await filterShowOnlyFinished();
     }
 
@@ -681,7 +681,7 @@ async function scrapeData() {
     await extractBookDetailsInListMode(bookDataMap);
     await returnToGridView();
 
-    if(showOnlyFinished = true){
+    if(showOnlyFinished === true){
         await undoFilterOnlyFinished();
     }
     
